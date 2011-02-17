@@ -180,7 +180,7 @@ static ngx_int_t ngx_http_jsonp_header_filter( ngx_http_request_t *r )
         // in the configuration?
         if ( ngx_http_test_content_type(r, &cf->mimetypes) == NULL )
         {
-            ngx_log_error(NGX_LOG_INFO, r->connection->log, 0,
+            ngx_log_error(NGX_LOG_DEBUG, r->connection->log, 0,
                 "http jsonp filter: enabled but not configured for this mimetype");
         }
         else
@@ -190,7 +190,7 @@ static ngx_int_t ngx_http_jsonp_header_filter( ngx_http_request_t *r )
             callback = ngx_http_get_indexed_variable(r, cf->variable_index);
 
             if (callback == NULL || callback->not_found || callback->len == 0) {
-                ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                ngx_log_error(NGX_LOG_DEBUG, r->connection->log, 0,
                     "http jsonp filter: the \"%V\" variable is not set",
                     &ngx_http_jsonp_callback_variable_name);
                 // We will not return an error on this case
@@ -220,7 +220,9 @@ static ngx_int_t ngx_http_jsonp_header_filter( ngx_http_request_t *r )
                 // adding the length of the json padding
                 if (r->headers_out.content_length_n != -1)
                 {
-                    r->headers_out.content_length_n += callback->len + 3;
+                    size_t len = r->headers_out.content_length_n + callback->len + 1 + sizeof(");") - 1;
+                    ngx_http_clear_content_length(r);
+                    r->headers_out.content_length_n = len;
                 }
             }
         }
