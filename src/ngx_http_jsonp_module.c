@@ -61,7 +61,7 @@ static ngx_command_t  ngx_http_jsonp_filter_commands[] = {
       ngx_http_types_slot,
       NGX_HTTP_LOC_CONF_OFFSET,
       offsetof(ngx_http_jsonp_conf_t, mimetypes_keys),
-      NULL }
+      &ngx_http_jsonp_default_mimetypes[0]  }
 };
 
 
@@ -115,8 +115,8 @@ static char * ngx_http_jsonp_directive_jsonp(ngx_conf_t *cf, ngx_command_t *cmd,
 
     return ngx_conf_set_flag_slot(cf, cmd, conf);
 }
-    
-    
+
+
 
 // Initialize a configuration structure
 static void * ngx_http_jsonp_create_conf(ngx_conf_t *cf)
@@ -146,6 +146,7 @@ static char * ngx_http_jsonp_merge_conf(ngx_conf_t *cf, void *parent, void *chil
     {
         conf->variable_index = prev->variable_index;
     }
+
 
     // Merge the applicable mimetypes
     if (ngx_http_merge_types(cf, conf->mimetypes_keys, &conf->mimetypes,
@@ -214,7 +215,7 @@ static ngx_int_t ngx_http_jsonp_header_filter( ngx_http_request_t *r )
                 // header for the response
                 r->headers_out.content_type = ngx_http_jsonp_mimetype;
                 r->headers_out.content_type_len = ngx_http_jsonp_mimetype.len;
-                
+
                 // Modifying the content lenght if it is set,
                 // adding the length of the json padding
                 if (r->headers_out.content_length_n != -1)
