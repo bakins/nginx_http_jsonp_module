@@ -4,7 +4,7 @@
 
 
 // JSONP mimetype
-ngx_str_t ngx_http_jsonp_mimetype = ngx_string("text/javascript");
+ngx_str_t ngx_http_jsonp_mimetype = ngx_string("application/javascript");
 // Variable name
 ngx_str_t ngx_http_jsonp_callback_variable_name = ngx_string("jsonp_callback");
 // Default applicable mimetypes
