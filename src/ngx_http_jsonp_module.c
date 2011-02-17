@@ -215,6 +215,7 @@ static ngx_int_t ngx_http_jsonp_header_filter( ngx_http_request_t *r )
                 // header for the response
                 r->headers_out.content_type = ngx_http_jsonp_mimetype;
                 r->headers_out.content_type_len = ngx_http_jsonp_mimetype.len;
+                r->headers_out.content_type_lowcase = NULL;
 
                 // Modifying the content lenght if it is set,
                 // adding the length of the json padding
