@@ -2,6 +2,8 @@
 #include <ngx_core.h>
 #include <ngx_http.h>
 
+/* I tried to resist the urge to completely rewrite this*/
+
 
 // JSONP mimetype
 ngx_str_t ngx_http_jsonp_mimetype = ngx_string("application/javascript");
