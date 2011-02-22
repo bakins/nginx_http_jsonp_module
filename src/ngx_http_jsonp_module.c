@@ -182,7 +182,7 @@ static ngx_int_t ngx_http_jsonp_header_filter( ngx_http_request_t *r )
         // in the configuration?
         if ( ngx_http_test_content_type(r, &cf->mimetypes) == NULL )
         {
-            ngx_log_error(NGX_LOG_DEBUG, r->connection->log, 0,
+            ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
                 "http jsonp filter: enabled but not configured for this mimetype");
         }
         else
