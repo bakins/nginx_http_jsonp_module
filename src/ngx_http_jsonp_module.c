@@ -2,10 +2,9 @@
 #include <ngx_core.h>
 #include <ngx_http.h>
 
-/* I tried to resist the urge to completely rewrite this*/
-
 
 // JSONP mimetype
+/* TODO: configurable */
 static ngx_str_t ngx_http_jsonp_mimetype = ngx_string("application/javascript");
 // Variable name
 static ngx_str_t ngx_http_jsonp_callback_variable_name = ngx_string("jsonp_callback");
@@ -39,8 +38,6 @@ static char * ngx_http_jsonp_merge_conf(ngx_conf_t *cf, void *parent, void *chil
 static ngx_int_t ngx_http_jsonp_body_filter( ngx_http_request_t *r, ngx_chain_t *in );
 static ngx_int_t ngx_http_jsonp_header_filter( ngx_http_request_t *r );
 static ngx_int_t ngx_http_jsonp_filter_init( ngx_conf_t * cf );
-
-
 
 // Configuration directives for this module
 static ngx_command_t  ngx_http_jsonp_filter_commands[] = {
@@ -138,14 +135,7 @@ static ngx_int_t ngx_http_jsonp_header_filter( ngx_http_request_t *r )
     // Getting the current configuration object
     cf = ngx_http_get_module_loc_conf(r, ngx_http_jsonp_filter_module);
 
-    if (r != r->main) {
-        return ngx_http_next_header_filter(r);
-    }
-
-    if (cf->enable && r->headers_out.status == NGX_HTTP_OK
-        && !r->header_only ) {
-        ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-                       "http jsonp filter");
+    if (r != r->main || !cf->enable || r->headers_out.status != NGX_HTTP_OK || r->header_only) {
         return ngx_http_next_header_filter(r);
     }
 
