@@ -224,7 +224,7 @@ static ngx_int_t ngx_http_jsonp_body_filter( ngx_http_request_t *r, ngx_chain_t 
     // This is the first buffer chain we see for this request?
     if (!ctx->prefix) {
         ctx->prefix = 1;
-        len = ctx->callback.len + sizeof("(") - 1;
+        len = ctx->callback.len + 1;
 
         b = ngx_create_temp_buf(r->pool, len);
         if (b == NULL) {
